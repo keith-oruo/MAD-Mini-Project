@@ -8,9 +8,7 @@ import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.madproject.db.dao.*
 import com.example.madproject.db.entities.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import java.util.Date
 
 /**
  * The main database class for the application.
@@ -19,7 +17,7 @@ import kotlinx.coroutines.launch
  */
 @Database(
     entities = [Profile::class, Claim::class, Invoice::class, Message::class, AuditLog::class],
-    version = 2,
+    version = 9, // Incremented version to force recreation
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -45,38 +43,23 @@ abstract class AppDatabase : RoomDatabase() {
                 .addCallback(object : Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
-                        CoroutineScope(Dispatchers.IO).launch {
-                            INSTANCE?.let { database ->
-                                val profileDao = database.profileDao()
-                                profileDao.insert(
-                                    Profile(
-                                        username = "patient",
-                                        name = "John Doe",
-                                        role = "Patient",
-                                        email = "john.doe@example.com",
-                                        passwordHash = "password"
-                                    )
-                                )
-                                profileDao.insert(
-                                    Profile(
-                                        username = "hospital",
-                                        name = "General Hospital",
-                                        role = "Hospital",
-                                        email = "contact@generalhospital.com",
-                                        passwordHash = "password"
-                                    )
-                                )
-                                profileDao.insert(
-                                    Profile(
-                                        username = "insurer",
-                                        name = "Health Insurers Inc.",
-                                        role = "Insurer",
-                                        email = "claims@healthinsurers.com",
-                                        passwordHash = "password"
-                                    )
-                                )
-                            }
-                        }
+                        // Use execSQL to insert data directly, avoiding the race condition.
+                        db.execSQL("INSERT INTO profiles (username, name, role, email, passwordHash) VALUES ('patient', 'John Doe', 'Patient', 'john.doe@example.com', 'password')")
+                        db.execSQL("INSERT INTO profiles (username, name, role, email, passwordHash) VALUES ('hospital', 'General Hospital', 'Hospital', 'contact@generalhospital.com', 'password')")
+                        db.execSQL("INSERT INTO profiles (username, name, role, email, passwordHash) VALUES ('insurer', 'Health Insurers Inc.', 'Insurer', 'claims@healthinsurers.com', 'password')")
+
+                        // Dummy Claims
+                        db.execSQL("INSERT INTO claims (patientId, hospitalId, insurerId, amount, description, status) VALUES (1, 2, 3, 500.0, 'Routine Checkup', 'Approved')")
+                        db.execSQL("INSERT INTO claims (patientId, hospitalId, insurerId, amount, description, status) VALUES (1, 2, 3, 1200.0, 'Emergency Room Visit', 'Pending')")
+
+                        // Dummy Invoices
+                        val currentTime = System.currentTimeMillis()
+                        db.execSQL("INSERT INTO invoices (claimId, amount, issueDate, status) VALUES (1, 500.0, $currentTime, 'Paid')")
+                        db.execSQL("INSERT INTO invoices (claimId, amount, issueDate, status) VALUES (2, 1200.0, $currentTime, 'Unpaid')")
+
+                        // Dummy Messages
+                        db.execSQL("INSERT INTO messages (claimId, senderId, receiverId, content, timestamp) VALUES (1, 1, 2, 'Hi, please check my claim.', $currentTime)")
+                        db.execSQL("INSERT INTO messages (claimId, senderId, receiverId, content, timestamp) VALUES (1, 2, 1, 'We are processing your claim.', $currentTime)")
                     }
                 }).build()
                 INSTANCE = instance

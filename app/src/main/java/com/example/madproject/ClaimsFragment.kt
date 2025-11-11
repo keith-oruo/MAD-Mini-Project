@@ -32,6 +32,12 @@ class ClaimsFragment : Fragment() {
             adapter.submitList(it)
         }
 
+        binding.submitClaimButton.setOnClickListener {
+            val description = binding.claimDescriptionEditText.text.toString()
+            viewModel.submitClaim(description)
+            binding.claimDescriptionEditText.text.clear()
+        }
+
         return binding.root
     }
 }

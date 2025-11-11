@@ -3,12 +3,34 @@ package com.example.madproject
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import com.example.madproject.db.AppDatabase
+import com.example.madproject.db.dao.ClaimDao
 import com.example.madproject.db.entities.Claim
+import kotlinx.coroutines.launch
 
 class ClaimsViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val claimDao = AppDatabase.getDatabase(application).claimDao()
+    private val claimDao: ClaimDao
+    val allClaims: LiveData<List<Claim>>
 
-    val allClaims: LiveData<List<Claim>> = claimDao.getAllClaims()
+    init {
+        val database = AppDatabase.getDatabase(application)
+        claimDao = database.claimDao()
+        allClaims = claimDao.getAllClaims()
+    }
+
+    fun submitClaim(description: String) {
+        viewModelScope.launch {
+            val newClaim = Claim(
+                patientId = 1, // Assuming patientId 1 for now
+                hospitalId = 2, // Assuming hospitalId 2
+                insurerId = 3, // Assuming insurerId 3
+                amount = 100.0,
+                description = description,
+                status = "Submitted"
+            )
+            claimDao.insert(newClaim)
+        }
+    }
 }
