@@ -16,10 +16,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     private val profileDao = AppDatabase.getDatabase(application).profileDao()
 
-    fun login() {
+    fun login(username: String, password_val: String) {
         viewModelScope.launch {
-            val user = profileDao.getProfileByUsername(username.value ?: "")
-            if (user != null && user.passwordHash == password.value) {
+            val user = profileDao.getProfileByUsername(username)
+            if (user != null && user.passwordHash == password_val) {
                 loginSuccess.postValue(true)
             } else {
                 loginSuccess.postValue(false)

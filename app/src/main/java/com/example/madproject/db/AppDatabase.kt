@@ -5,8 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.madproject.db.dao.*
 import com.example.madproject.db.entities.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * The main database class for the application.
@@ -15,7 +19,7 @@ import com.example.madproject.db.entities.*
  */
 @Database(
     entities = [Profile::class, Claim::class, Invoice::class, Message::class, AuditLog::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -37,7 +41,44 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "claims_database"
-                ).build()
+                ).fallbackToDestructiveMigration()
+                .addCallback(object : Callback() {
+                    override fun onCreate(db: SupportSQLiteDatabase) {
+                        super.onCreate(db)
+                        CoroutineScope(Dispatchers.IO).launch {
+                            INSTANCE?.let { database ->
+                                val profileDao = database.profileDao()
+                                profileDao.insert(
+                                    Profile(
+                                        username = "patient",
+                                        name = "John Doe",
+                                        role = "Patient",
+                                        email = "john.doe@example.com",
+                                        passwordHash = "password"
+                                    )
+                                )
+                                profileDao.insert(
+                                    Profile(
+                                        username = "hospital",
+                                        name = "General Hospital",
+                                        role = "Hospital",
+                                        email = "contact@generalhospital.com",
+                                        passwordHash = "password"
+                                    )
+                                )
+                                profileDao.insert(
+                                    Profile(
+                                        username = "insurer",
+                                        name = "Health Insurers Inc.",
+                                        role = "Insurer",
+                                        email = "claims@healthinsurers.com",
+                                        passwordHash = "password"
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }).build()
                 INSTANCE = instance
                 instance
             }

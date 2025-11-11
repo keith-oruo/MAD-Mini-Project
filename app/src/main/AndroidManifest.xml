@@ -22,6 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".AuthActivity"
+            android:theme="@style/Theme.MADProject" />
+        <activity android:name=".DashboardActivity"
+            android:theme="@style/Theme.MADProject" />
     </application>
 
 </manifest>
