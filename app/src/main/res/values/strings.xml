@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Claims Management</string>
+
+    <!-- Authentication -->
+    <string name="login_title">Claims Management Login</string>
+    <string name="username_hint">Username</string>
+    <string name="password_hint">Password</string>
+    <string name="login_button">Login</string>
+    <string name="logout">Logout</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">Dashboard</string>
+    <string name="manage_claims">Manage Claims</string>
+    <string name="view_invoices">View Invoices</string>
+    <string name="view_messages">View Messages</string>
+    <string name="view_audit_logs">View Audit Logs</string>
+    <string name="manage_profile">Manage Profile</string>
+
+    <!-- Fragment Titles -->
+    <string name="claims_title">Claims</string>
+    <string name="invoices_title">Invoices</string>
+    <string name="messages_title">Messages</string>
+    <string name="audit_logs_title">Audit Logs</string>
+    <string name="profile_title">Profile</string>
+
+    <!-- Actions -->
+    <string name="submit_claim">Submit New Claim</string>
+</resources>
