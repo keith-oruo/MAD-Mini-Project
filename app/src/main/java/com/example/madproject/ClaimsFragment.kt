@@ -24,7 +24,7 @@ class ClaimsFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        val adapter = ClaimsAdapter()
+        val adapter = ClaimsAdapter(viewModel)
         binding.claimsRecyclerView.adapter = adapter
         binding.claimsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 

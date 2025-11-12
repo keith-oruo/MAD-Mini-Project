@@ -20,9 +20,6 @@
             android:id="@+id/action_dashboardFragment_to_messagesFragment"
             app:destination="@id/messagesFragment" />
         <action
-            android:id="@+id/action_dashboardFragment_to_auditLogsFragment"
-            app:destination="@id/auditLogsFragment" />
-        <action
             android:id="@+id/action_dashboardFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
     </fragment>
@@ -41,11 +38,6 @@
         android:name="com.example.madproject.MessagesFragment"
         android:label="fragment_messages"
         tools:layout="@layout/fragment_messages" />
-    <fragment
-        android:id="@+id/auditLogsFragment"
-        android:name="com.example.madproject.AuditLogsFragment"
-        android:label="fragment_audit_logs"
-        tools:layout="@layout/fragment_audit_logs" />
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.madproject.ProfileFragment"

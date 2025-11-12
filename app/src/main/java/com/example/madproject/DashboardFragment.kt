@@ -32,10 +32,6 @@ class DashboardFragment : Fragment() {
             findNavController().navigate(R.id.action_dashboardFragment_to_messagesFragment)
         }
 
-        binding.auditLogsButton.setOnClickListener {
-            findNavController().navigate(R.id.action_dashboardFragment_to_auditLogsFragment)
-        }
-
         binding.profileButton.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_profileFragment)
         }

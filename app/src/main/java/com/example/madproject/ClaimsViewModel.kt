@@ -23,14 +23,21 @@ class ClaimsViewModel(application: Application) : AndroidViewModel(application) 
     fun submitClaim(description: String) {
         viewModelScope.launch {
             val newClaim = Claim(
-                patientId = 1, // Assuming patientId 1 for now
-                hospitalId = 2, // Assuming hospitalId 2
-                insurerId = 3, // Assuming insurerId 3
+                patientId = 1,
+                hospitalId = 2,
+                insurerId = 3,
                 amount = 100.0,
                 description = description,
                 status = "Submitted"
             )
             claimDao.insert(newClaim)
+        }
+    }
+
+    fun updateClaimAmount(claim: Claim, newAmount: Double) {
+        viewModelScope.launch {
+            val updatedClaim = claim.copy(amount = newAmount)
+            claimDao.update(updatedClaim)
         }
     }
 }
